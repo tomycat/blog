@@ -1,0 +1,21 @@
+.main{width:730px;}
+.head,.content{
+	width:837px;
+	padding-left:50px;
+}
+.head{
+	position:fixed;
+	box-shadow:0 2px 5px rgba(125,125,125,0.2);
+	background-color:#fff;
+}
+.content{
+	padding-top:50px;
+}
+.nav-menu{padding:10px 0;}
+.nav-menu a,.nav-menu a:hover{
+	text-decoration:none;
+	font-size:16px;
+}
+.disqus-container{
+    padding:0 20px;
+}
