@@ -2,6 +2,7 @@ phonegap-icon-splash-generator.sh
 pdfs
 nohup.out
 *.iml
+*.deploy
 .idea/
 .ipr
 .iws
