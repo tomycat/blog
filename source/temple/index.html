@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" charset="utf-8" href="http://a.tbcdn.cn/s/kissy/1.3.0/css/dpl/base-min.css">
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="css/md.css" type="text/css"/>
+    <link rel="stylesheet" href="css/forkme.css" />
+    <!--[if IE]>
+        <link rel="stylesheet" href="css/forkme-ie.css" />
+    <![endif]-->
+    <script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+    <!-- <script type="text/javascript" src="/Dropbox/gits/gallery/temple/1.0/build/index-min.js"></script> -->
+    <title>Editor</title>
+    <style type="text/css" media="screen">
+     .ace_editor {
+       position: relative !important;
+       border: 1px solid lightgray;
+     }
+     .editors{margin:0 auto;width:85%;}
+     .onerow{margin-top:20px;clear:left;}
+     .editor-con,.result-con{
+       margin:0;
+       width: 40%;
+       float:left;
+     }
+     .editor{
+       height: 182px;
+     }
+     .editor-result{resize:none;border-color:#ccc;padding:0;margin-left:5px;height:200px;width:100%;margin-top:2px;}
+     .result-info{padding-left:8px;}
+     .result-info label{display:inline;margin-left:10px;}
+     .check-radio{position:relative;top:-1px;}
+     .github-fork-ribbon-wrapper{position:fixed;}
+    </style>
+  </head>
+  <body>
+    <div class="github-fork-ribbon-wrapper left">
+      <div class="github-fork-ribbon">
+        <a href="https://github.com/WeweTom/temple">Fork me on GitHub</a>
+      </div>
+    </div>
+<div class="editors">
+    <h1> Temple 模板语法与编译结果示例</h1>
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    综合例子 if/else/if/each嵌套 
+  </p>
+<pre class="editor">
+{#if items.length}
+{#each items as item index}
+  {#if index == 0}
+  first one: {item}
+  {#elseif index == 1}
+  second one
+  {#else}
+  rest one
+  {/if}
+{/each}
+{/if}
+</pre>
+</div>
+
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+    <!-- 
+    <label>
+      <input class="check-radio" type="radio" name="each-radio"/>
+      js
+    </label>
+    <label>
+      <input class="check-radio" type="radio" name="each-radio"/>
+      vm
+    </label>
+    -->
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    <code>each</code> 
+  </p>
+<pre class="editor">
+{#each items as item index}
+  {index} : {item}
+{/each}
+</pre>
+</div>
+
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+    <!-- 
+    <label>
+      <input class="check-radio" type="radio" name="each-radio"/>
+      js
+    </label>
+    <label>
+      <input class="check-radio" type="radio" name="each-radio"/>
+      vm
+    </label>
+    -->
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    <code>if/elseif/else</code> 
+  </p>
+<pre class="editor">
+{#if name == "tom"}
+  say hello to {name}
+{#else}
+  say good by to {name}
+{/if}
+</pre>
+</div>
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    <code>include</code> 
+  </p>
+<pre class="editor" type="code" data-lang="js">
+Temple.add("head","this is head , my name is {name} !");
+window.TempleResult = Temple.to_js('{#include head} \n this is body');
+</pre>
+</div>
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    <code>extend</code> 
+  </p>
+<pre class="editor" type="code" data-lang="js">
+Temple.add("base","this is head , my name is {#block name} jerry {/block}!");
+
+window.TempleResult = Temple.to_js('{#extend base} {#block name} john {/block}');
+</pre>
+</div>
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    注释
+  </p>
+
+<pre class="editor">
+{#!this is a line of comment}
+{#! 可以包含"{"、"#"、"\\}" }
+{#! 中文注释} 中文字符串abc
+</pre>
+</div>
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    自定义函数
+  </p>
+<pre class="editor" type="code" data-lang="js">
+Temple.reg("escape",function(s){
+return escape(s);
+});
+window.TempleResult = Temple.to_js('{escape("name")}');
+</pre>
+</div>
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+
+<div class="onerow ks-clear">
+<div class="editor-con">
+  <p>
+    复杂表达式
+  </p>
+<pre class="editor">
+{ a+(b-c*d/(ef%3))}
+</pre>
+</div>
+<div class="result-con">
+  <p class="result-info"> 
+    编译结果
+  </p>
+  <textarea readonly class="editor-result J_Result" resize="none"></textarea>
+</div>
+</div>
+</div>
+    <script>
+     KISSY.use("dom,event,gallery/temple/1.0/index",function(S,D,E,Temple){
+       window.Temple = Temple;
+       // create first editor
+       var els = D.query(".editor");
+       S.each(els,function(el){
+         var editor = ace.edit(el);
+         var lang = D.attr(el,"data-lang");
+         var con = D.parent(el,".onerow");
+         var txtarea = D.get('.J_Result',con);
+         var opt = {};
+         if(lang){
+           editor.getSession().setMode("ace/mode/javascript");
+           opt = {exec:true};
+           compile(editor,txtarea,opt);
+         }else{
+           compile(editor,txtarea,opt);
+         }
+         editor.on("change",S.buffer(function(){
+           compile(editor,txtarea,opt);
+         },500));
+         editor.setTheme("ace/theme/twilight");
+       });
+       
+       function compile(editor,txtarea,opt){
+         if(opt.exec){
+           eval(editor.getValue());
+           var result = window.TempleResult;
+         }else{
+           var result = Temple.to_js(editor.getValue());
+         }
+         D.val(txtarea,result);
+       }
+     });
+    </script>
+  </body>
+</html>

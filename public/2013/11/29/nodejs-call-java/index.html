@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>nodejs 中调用java | jinwei&#39;s weblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="java由于其历史悠久，有很多有用的jar包，nodejs作为比较新的平台，相比之下还是有所欠缺的。本篇文章介绍如何在nodejs中调用java程序，这样既能用你熟悉的js语言，又能享用java的成熟工具。
+下面以nodejs中调用 yuicompressor.jar 这个jar包进行压缩的示例来说明node调用java的完整过程——尽管yuicompressor.jar已经很大程度上被uglif">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nodejs 中调用java">
+<meta property="og:url" content="http://tomycat.github.io/2013/11/29/nodejs-call-java/">
+<meta property="og:site_name" content="jinwei's weblog">
+<meta property="og:description" content="java由于其历史悠久，有很多有用的jar包，nodejs作为比较新的平台，相比之下还是有所欠缺的。本篇文章介绍如何在nodejs中调用java程序，这样既能用你熟悉的js语言，又能享用java的成熟工具。
+下面以nodejs中调用 yuicompressor.jar 这个jar包进行压缩的示例来说明node调用java的完整过程——尽管yuicompressor.jar已经很大程度上被uglif">
+<meta property="og:image" content="https://lh3.googleusercontent.com/-cVhFVD8smPw/UphdH9jhD_I/AAAAAAAABoE/MVAteYN7WdU/w506-h281/2013-11-29+17:23:03%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nodejs 中调用java">
+<meta name="twitter:description" content="java由于其历史悠久，有很多有用的jar包，nodejs作为比较新的平台，相比之下还是有所欠缺的。本篇文章介绍如何在nodejs中调用java程序，这样既能用你熟悉的js语言，又能享用java的成熟工具。
+下面以nodejs中调用 yuicompressor.jar 这个jar包进行压缩的示例来说明node调用java的完整过程——尽管yuicompressor.jar已经很大程度上被uglif">
+
+  
+    <link rel="alternative" href="/atom.xml" title="jinwei&#39;s weblog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jinwei&#39;s weblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:http://tomycat.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="default-nodejs-call-java" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2013/11/29/nodejs-call-java/" class="article-date">
+  <time datetime="2013-11-28T16:00:00.000Z" itemprop="datePublished">11月 29 2013</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      nodejs 中调用java
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>java由于其历史悠久，有很多有用的jar包，nodejs作为比较新的平台，相比之下还是有所欠<br>缺的。本篇文章介绍如何在nodejs中调用java程序，这样既能用你熟悉的js语言，又能享用<br>java的成熟工具。</p>
+<p>下面以nodejs中调用 yuicompressor.jar 这个jar包进行压缩的示例来说明node调用java的<br>完整过程——尽管yuicompressor.jar已经很大程度上被uglifyjs代替了。</p>
+<p>类似的，这个例子也可以调用 google 的压缩工具 compiler.jar</p>
+<h2 id="windows_环境中_nodejs_调用_java">windows 环境中 nodejs 调用 java</h2>
+<ol>
+<li>确保你已经正确的安装了java，你可以通过下面的代码来检查是否安装成功</li>
+</ol>
+<pre><code>java -version</code></pre>
+
+<p>若看到类似下面的截图，表示安装成功了<br><img src="https://lh3.googleusercontent.com/-cVhFVD8smPw/UphdH9jhD_I/AAAAAAAABoE/MVAteYN7WdU/w506-h281/2013-11-29+17:23:03%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="Alt Text"> </p>
+<ol>
+<li>用nodejs封装cmdline下的命令</li>
+</ol>
+<p>下载yuicompressor.jar ，建立一个测试文件test.js，内容随便写点什么</p>
+<p>在windows命令行中，压缩这个js的命令是：</p>
+<pre><code>java -jar yuicompressor.jar test.js</code></pre>
+
+<p>上面的命令实际上完整的是（windows有个cmd.exe来完成实际的工作）</p>
+<pre><code>cmd /c java -jar yuicompressor.jar test.js</code></pre>
+
+<p>nodejs提供了spawn工具来执行外部程序命令，详见 <a href="http://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options" target="_blank" rel="external">nodejs文档</a></p>
+<p>完整的代码如下</p>
+<pre><code>var spawn = require('child_process').spawn;
+
+
+exe(["/c","java","-jar","yuicompressor.jar","test.js"]);
+// 相当于在命令行下执行 cmd /c java -jar yuicompressor.jar test.js
+// 也可以加入更多的参数
+
+function exe(command){
+    // windows下 
+    var cmd = spawn("cmd",command);
+
+    cmd.stdout.setEncoding("ASCII");
+    cmd.stdout.on("data",function(data){
+    console.log("------------------------------");
+    console.log("exec",command);
+    console.log("stdout:"+data);
+    });
+
+    cmd.stderr.on("data",function(data){
+    console.log("------------------------------");
+    console.log("stderr:"+data);
+    console.log("------------------------------");
+    });
+
+    cmd.on("exit",function(code){
+    console.log("exited with code:"+code);
+    console.log("------------------------------");
+    });
+};</code></pre>
+
+<p>将上面的代码保存为 node-compress.js，执行即可</p>
+<p><code><pre>node node-compress.js</pre></code></p>
+<h2 id="linux_版本">linux 版本</h2>
+<p>linux 调用java不用像windows 那样：</p>
+<pre><code>cmd /c java -jar yuicompressor.jar test.js</code></pre>
+
+<p>而是直接调用</p>
+<pre><code>java -jar yuicompressor.jar test.js</code></pre>
+
+<p>即可</p>
+<p>所以完整的代码是：</p>
+<pre><code>var spawn = require('child_process').spawn;
+
+exe(["-jar","yuicompressor.jar","test.js"]);
+// 相当于在命令行下执行 java -jar yuicompressor.jar test.js
+
+function exe(command){
+
+    // linux下，不用 cmd /c java -jar yuicompressor.jar test.js，这种形式，直接
+    // java -jar yuicompressor.jar test.js 即可
+    var cmd = spawn("java",command);
+
+    cmd.stdout.setEncoding("ASCII");
+    cmd.stdout.on("data",function(data){
+    console.log("------------------------------");
+    console.log("exec",command);
+    console.log("stdout:"+data);
+    });
+
+    cmd.stderr.on("data",function(data){
+    console.log("------------------------------");
+    console.log("stderr:"+data);
+    console.log("------------------------------");
+    });
+
+    cmd.on("exit",function(code){
+    console.log("exited with code:"+code);
+    console.log("------------------------------");
+    });
+};</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tomycat.github.io/2013/11/29/nodejs-call-java/" data-id="n6uqayt0fmat5upr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/other/">other</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2013/12/22/use-google-road-plan/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用google 地图做路线规划
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2013/11/28/raphaeljs-ie8-performance/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">raphaeljs 在 IE8 下性能差的问题及解决方案</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/clojure/">clojure</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cordova/">cordova</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/">other</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phonegap/">phonegap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/startup/">startup</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/clojure/" style="font-size: 18.00px;">clojure</a><a href="/tags/cordova/" style="font-size: 16.00px;">cordova</a><a href="/tags/cordova,phonegap/" style="font-size: 10.00px;">cordova,phonegap</a><a href="/tags/javascript/" style="font-size: 14.00px;">javascript</a><a href="/tags/life/" style="font-size: 14.00px;">life</a><a href="/tags/mongodb/" style="font-size: 12.00px;">mongodb</a><a href="/tags/other/" style="font-size: 20.00px;">other</a><a href="/tags/phonegap/" style="font-size: 12.00px;">phonegap</a><a href="/tags/startup/" style="font-size: 12.00px;">startup</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07">七月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12">十二月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11">十一月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10">十月 2013</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/07/20/testmd/">test.md</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/19/learning-clojure-company/">Clojure 的发展情况</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/16/learning-clojure-3/">学习 clojure 3 ：《Clojure程序设计》 Clojure 编程入门 - 在 repl 中测试代码</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/15/learning-clojure-2/">学习 clojure 2 ： 《Clojure程序设计》 Clojure 简介</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/14/learning-clojure-1/">学习 clojure 1：缘起</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 Jinwei Tang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
