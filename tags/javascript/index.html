@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Tag: javascript | jinwei&#39;s weblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="jinwei's weblog">
+<meta property="og:url" content="http://tomycat.github.io/tags/javascript/">
+<meta property="og:site_name" content="jinwei's weblog">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jinwei's weblog">
+<meta name="twitter:description">
+
+  
+    <link rel="alternative" href="/atom.xml" title="jinwei&#39;s weblog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jinwei&#39;s weblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:http://tomycat.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="default-emacs-tricks" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2013/10/29/emacs-tricks/" class="article-date">
+  <time datetime="2013-10-28T16:00:00.000Z" itemprop="datePublished">10月 29 2013</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2013/10/29/emacs-tricks/">在emacs内实现html标签 和 html实体 的相互转换</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>输出html代码的时候希望将其转义后输出，像这样的</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="subst">&</span><span class="literal">lt</span>;h1<span class="subst">&</span><span class="literal">gt</span>;this is h1<span class="subst">&</span><span class="literal">lt</span>;/h1<span class="subst">&</span><span class="literal">gt</span>;</div></pre></td></tr></table></figure>
+
+<p>但是在编辑的时候形态是这样的</p>
+<p><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;h1&gt;<span class="keyword">this</span> <span class="keyword">is</span> h1&lt;/h1&gt;</div></pre></td></tr></table></figure><br>如果借用外部的资源是很好解决的，只需将 <code>&lt;</code> 替换为 &amp;lt; <code>&gt;</code><br>替换为 &amp;gt;即可.</p>
+<p>使用emacs的话，写两个elisp函数即可：</p>
+<pre><code class="lisp">
+(defun region-entity-to-html (start end)
+  "Replace entities to html in region …."
+  (interactive "r")
+  (save-restriction
+        (narrow-to-region start end)
+
+        (goto-char (point-min))
+        (while (search-forward "&lt;" nil t) (replace-match "<" nil="" t))="" (goto-char="" (point-min))="" (while="" (search-forward="" "&gt;"="" t)="" (replace-match="" "="">" nil t))
+
+        ;; more here
+        )
+  )
+
+
+(defun region-html-to-entity (start end)
+  "Replace html to entities in region …."
+  (interactive "r")
+  (save-restriction
+        (narrow-to-region start end)
+
+        (goto-char (point-min))
+        (while (search-forward "<" nil="" t)="" (replace-match="" "&lt;"="" t))="" (goto-char="" (point-min))="" (while="" (search-forward="" "="">" nil t) (replace-match "&gt;" nil t))
+
+        ;; more here
+        )
+  )</"></"></code></pre>
+
+<p>将这两个函数放到~/.emacs中，以后要想将一段html转为html，只需<br>选中这段文本，然后执行命令M-x region-html-to-entity 或者 region-entity-to-html</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tomycat.github.io/2013/10/29/emacs-tricks/" data-id="sxov4524hokineqp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="default-temple-intro" class="article article-type-default" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2013/10/27/temple-intro/" class="article-date">
+  <time datetime="2013-10-26T16:00:00.000Z" itemprop="datePublished">10月 27 2013</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2013/10/27/temple-intro/">前端模板引擎Temple简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Features">Features</h3>
+<ul>
+<li>语法继承自KISSY 1.2 Template ,不过少了个花括号</li>
+<li>编译后的代码非常直观 <a href="http://tomycat.github.io/blog/temple/index.html" target="_blank" rel="external">Temple编译后的代码</a> </li>
+<li>基本的 if/elseif/else each</li>
+<li>include 子模板</li>
+<li>extend 模板继承</li>
+<li>if(exp) exp可以为复杂表达式</li>
+<li>模板允许使用自定义函数</li>
+</ul>
+<h3 id="Getting_Started">Getting Started</h3>
+<pre><code class="javascript">KISSY.use('gallery/temple/1.0/index', function (S, Temple) {
+     Temple.add("base","this is head , my sex is {#block name} female {/block}!");
+     var temple = Temple.compile('{#extend base} {#block name} {sex} {/block}');
+     var html = temple.render({"sex":"male"});
+     console.log(html);
+})</code></pre>
+
+<h3 id="API">API</h3>
+<ul>
+<li><code>Temple.compile</code> 将模板编译为可以直接执行的js函数，返回的对象具有render方法</li>
+<li><code>Temple.to_js</code> 将模板编译为js代码字符串,用于调试或者预编译</li>
+</ul>
+<h3 id="语法示例">语法示例</h3>
+<h4 id="expression_and_variable">expression and variable</h4>
+<pre><code class="javascript">
+var s = '{#if (a+(b-c*d/(ef%3)))}'
+          + 'blah blah {lib}'
+      + '{/if}';
+var temple = Temple.compile(s);
+
+temple.render({a:1,b:2,c:3,d:4,ef:5,lib:"KISSY"});
+// => "blah blah KISSY"
+</code></pre>
+
+<h4 id="if">if</h4>
+<pre><code class="javascript">
+var template = '{#if name}'
+                 + 'hi {name}'
+             + '{/if}'
+
+var temple = Temple.compile(template);
+temple.render({name:"tom"});
+// -> tom
+</code></pre>
+
+<h4 id="if/else">if/else</h4>
+<pre><code class="javascript">
+var template;
+template = '{#if name}'
+             + '{name}'
+         + '{#else}'
+             + 'noname'
+         + '{/if}'
+var temple = Temple.compile(template);
+template.render({name:"tom"});
+</code></pre>
+
+<h4 id="if/elseif/else">if/elseif/else</h4>
+<pre><code class="javascript">
+template = '{#if name}'
+             + '{name}'
+         + '{#elseif sex}'
+             + '{sex}'
+         + '{#else}'
+           + 'oops'
+         + '{/if}'
+var temple = Temple.compile(template);
+temple.render({name:"tom"});
+// => tom
+</code></pre>
+
+<h4 id="each">each</h4>
+<pre><code class="javascript">
+ var template =  '{#each items as item index}'
+                   + '{index} : {item.name}'
+               + '{/each}';
+
+var temple = Temple.compile(template);
+
+temple.render({items:[{name:"john"}]});
+// => "0 : john"
+</code></pre>
+
+<h4 id="include">include</h4>
+<pre><code class="javascript">
+Temple.add("head","&lt;h1&gt;共用头&lt;/h1&gt;");
+Temple.add("foot","&lt;h1&gt;共用脚&lt;/h1");
+
+var template = '{#include head}'
+             + '&lt;p&gt;身体是你自己的&lt;/p&gt;'
+             + '{#include foot}';
+var temple = Temple.compile(template);
+temple.render();
+// =&gt; "&lt;h1&gt;共用头&lt;/h1&gt;&lt;p&gt;身体是你自己的&lt;/p&gt;&lt;h1&gt;共用脚&lt;/h1"
+</code></pre>
+
+<h4 id="extend">extend</h4>
+<pre><code class="javascript">
+Temple.add("base","&lt;h1&gt;共用头&lt;/h1&gt;"
+                  + "{#block body}"
+                    + "&lt;p&gt;大家都公用的身体&lt;/p&gt;"
+                  + "{/block}"
+                + "&lt;h1&gt;共用脚&lt;/h1&gt;");
+
+var app = '{#extend base}'
+        + '{#block body}'
+        + '&lt;p&gt;你自己的身体&lt;/p&gt;'
+        + '{/block}';
+
+var temple;
+temple = Temple.compile(app);
+temple.render();
+// =&gt; "&lt;h1&gt;共用头&lt;/h1&gt;&lt;p&gt;你自己的身体&lt;/p&gt;&lt;h1&gt;共用脚&lt;/h1&gt;"
+</code></pre>
+
+<h4 id="custom_function">custom function</h4>
+<pre><code class="javascript">
+Temple.reg("myescape",function(s){
+  return escape(s);
+});
+var temple  = Temple.compile('{myescape(htmlstr)}');
+temple.render({htmlstr:"&lt;p&gt;foo&lt;/p&gt;"});
+// => "%3Cp%3Efoo%3C/p%3E"
+</code></pre>
+
+<h4 id="comment">comment</h4>
+<pre><code class="javascript">
+var temple;
+temple  = Temple.compile('{#!this is a line of comment}');
+temple.render();
+// => ""
+
+temple  = Temple.compile('{#! 可以包含"{"、"#"、"\\}" }');
+temple.render();
+// => ""
+
+temple  = Temple.compile('{#! 中文注释} 中文字符串abc');
+temple.render();
+// => " 中文字符串abc"
+</code></pre>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tomycat.github.io/2013/10/27/temple-intro/" data-id="5v56x6puuzxzyotv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+  
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/clojure/">clojure</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cordova/">cordova</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/">other</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phonegap/">phonegap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/startup/">startup</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/clojure/" style="font-size: 18.00px;">clojure</a><a href="/tags/cordova/" style="font-size: 16.00px;">cordova</a><a href="/tags/cordova,phonegap/" style="font-size: 10.00px;">cordova,phonegap</a><a href="/tags/javascript/" style="font-size: 14.00px;">javascript</a><a href="/tags/life/" style="font-size: 14.00px;">life</a><a href="/tags/mongodb/" style="font-size: 12.00px;">mongodb</a><a href="/tags/other/" style="font-size: 20.00px;">other</a><a href="/tags/phonegap/" style="font-size: 12.00px;">phonegap</a><a href="/tags/startup/" style="font-size: 12.00px;">startup</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07">七月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12">十二月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11">十一月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10">十月 2013</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/07/20/testmd/">test.md</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/19/learning-clojure-company/">Clojure 的发展情况</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/16/learning-clojure-3/">学习 clojure 3 ：《Clojure程序设计》 Clojure 编程入门 - 在 repl 中测试代码</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/15/learning-clojure-2/">学习 clojure 2 ： 《Clojure程序设计》 Clojure 简介</a>
+          </li>
+        
+          <li>
+            <a href="/2014/07/14/learning-clojure-1/">学习 clojure 1：缘起</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 Jinwei Tang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
